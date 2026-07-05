@@ -177,7 +177,7 @@
                     Controle de Qualidade <span class="bg-gradient-to-r from-accentCyan to-accentIndigo bg-clip-text text-transparent">IQC</span>
                 </h1>
                 <p class="text-slate-400 text-sm mt-1">
-                    Visualize e analise os dados de inspeção de qualidade em tempo real, com métricas detalhadas, gráficos interativos e relatórios resumidos.
+                    Monitoramento de Inspeção de Peças e Não Conformidades
                 </p>
             </div>
             
@@ -194,22 +194,22 @@
             <div class="lg:col-span-1 space-y-6">
                 
                 <!-- Upload Panel -->
-                <div class="glass-panel rounded-xl p-5">
-                    <h2 class="text-lg font-bold font-display text-white mb-4 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-accentCyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                <div class="glass-panel rounded-xl p-4">
+                    <h2 class="text-base font-bold font-display text-white mb-3 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-accentCyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                         Importação de Arquivo
                     </h2>
                     
                     <!-- Drag & Drop Zone -->
-                    <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-slate-500 rounded-lg p-6 text-center cursor-pointer transition-all bg-slate-900/30"
+                    <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-slate-500 rounded-lg p-4 text-center cursor-pointer transition-all bg-slate-900/30"
                          onclick="triggerFileInput()"
                          ondragover="handleDragOver(event)"
                          ondragleave="handleDragLeave(event)"
                          ondrop="handleDropFile(event)">
                         <input type="file" id="file-input" accept=".xlsx,.xlsm" class="hidden" onchange="handleFileInput(event)">
-                        <svg class="w-8 h-8 mx-auto text-slate-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                        <p class="text-sm font-medium text-slate-300">Escolha o arquivo</p>
-                        <p class="text-xs text-slate-500 mt-1">.xlsm ou .xlsx</p>
+                        <svg class="w-6 h-6 mx-auto text-slate-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                        <p class="text-xs font-medium text-slate-300">Escolha o arquivo</p>
+                        <p class="text-[10px] text-slate-500 mt-1">clique aqui</p>
                     </div>
                     
                     <!-- Sheet Selection (Conditional) -->
@@ -350,11 +350,9 @@
                         <div class="glass-panel rounded-xl p-5 lg:col-span-2">
                             <div class="flex items-center justify-between mb-4">
                                 <h3 class="text-sm font-bold font-display text-slate-200 uppercase tracking-wider">
-                                    Comparativo de Turnos (Produtividade vs Qualidade)
+                                    Comparativo de Produtividade vs Qualidade
                                 </h3>
-                                <span class="text-xs text-slate-500">
-                                    Barras Lado a Lado
-                                </span>
+                                
                             </div>
                             <div class="relative h-80 w-full">
                                 <canvas id="chart-turno-compare"></canvas>
@@ -372,7 +370,7 @@
                             <div class="flex items-start justify-between mb-4 gap-3">
                                 <div>
                                     <h3 class="text-sm font-bold font-display text-slate-200 uppercase tracking-wider">
-                                        Pareto de Defeitos (Tipos)
+                                        Tipo de Defeitos
                                     </h3>
                                 </div>
                                 <button type="button" class="expand-card-btn" onclick="toggleScrollableSection('donut-summary', this)" aria-label="Expandir lista de defeitos">
@@ -398,7 +396,7 @@
                         <!-- Horizontal Bar Chart: Defective Pieces Ranking -->
                         <div class="glass-panel rounded-xl p-5">
                             <h3 class="text-sm font-bold font-display text-slate-200 uppercase tracking-wider mb-4">
-                                Peças Críticas (Ranking por Peças com Defeito)
+                                Peças Críticas
                             </h3>
                             <div class="relative h-72 w-full">
                                 <canvas id="chart-critical-pieces"></canvas>
@@ -413,7 +411,7 @@
                             <div class="flex items-start justify-between mb-4 gap-3">
                                 <div>
                                     <h3 class="text-sm font-bold font-display text-slate-200 uppercase tracking-wider">
-                                        Sumarização Detalhada de Não Conformidades
+                                        Não Conformidades Descritas
                                     </h3>
                                 </div>
                                 <button type="button" class="expand-card-btn" onclick="toggleScrollableSection('defect-list-wrapper', this)" aria-label="Expandir lista de não conformidades">
@@ -1006,9 +1004,23 @@
             var days = header.dayLabels.map(function(dl) { return Number(dl); });
             var maxDay = days.length ? Math.max.apply(null, days) : 31;
             
+            function shiftMatches(itemShift, filterShift) {
+                var s = String(itemShift || '').trim().toLowerCase();
+                if (filterShift === 'all') {
+                    return s === '1' || s === '2' || s === 'both' || s === '';
+                }
+                if (filterShift === '1') {
+                    return s === '1' || s === 'both' || s === '';
+                }
+                if (filterShift === '2') {
+                    return s === '2' || s === 'both' || s === '';
+                }
+                return false;
+            }
+
             // Filter general items by shift
-            var filtered = items.filter(function(it) { 
-                return shift === 'all' || it.shift === shift; 
+            var filtered = items.filter(function(it) {
+                return shiftMatches(it.shift, shift);
             });
             
             var totalsInspectedByDay = new Array(maxDay + 1).fill(0);
@@ -1086,14 +1098,21 @@
             
             for (var ii = 0; ii < items.length; ii++) {
                 var it = items[ii];
+                var itemShift = String(it.shift || '').trim().toLowerCase();
                 for (var idx = 0; idx < it.inspected.length; idx++) {
                     var day = days[idx] || (idx + 1);
                     if (day < state.startDay || day > state.endDay) continue;
                     
-                    if (it.shift === '1') {
+                    if (itemShift === '1') {
                         turno1Inspected += (it.inspected[idx] || 0);
                         turno1Defects += (it.defects[idx] || 0);
-                    } else if (it.shift === '2') {
+                    } else if (itemShift === '2') {
+                        turno2Inspected += (it.inspected[idx] || 0);
+                        turno2Defects += (it.defects[idx] || 0);
+                    } else if (itemShift === 'both' || itemShift === '') {
+                        // If a triplet row is labeled as both, count it for both shifts when showing 'all'
+                        turno1Inspected += (it.inspected[idx] || 0);
+                        turno1Defects += (it.defects[idx] || 0);
                         turno2Inspected += (it.inspected[idx] || 0);
                         turno2Defects += (it.defects[idx] || 0);
                     }
@@ -1187,15 +1206,31 @@
             
             // 1. COMPARATIVO DE TURNOS CHART (DUAL Y AXIS BAR CHART)
             var ctxCompare = document.getElementById('chart-turno-compare').getContext('2d');
-            
+            var turnoLabels = [];
+            var turnoInspectedData = [];
+            var turnoDefectsData = [];
+            if (state.shift === '1') {
+                turnoLabels = ['1º Turno'];
+                turnoInspectedData = [agg.turno1Inspected];
+                turnoDefectsData = [agg.turno1Defects];
+            } else if (state.shift === '2') {
+                turnoLabels = ['2º Turno'];
+                turnoInspectedData = [agg.turno2Inspected];
+                turnoDefectsData = [agg.turno2Defects];
+            } else {
+                turnoLabels = ['1º Turno', '2º Turno'];
+                turnoInspectedData = [agg.turno1Inspected, agg.turno2Inspected];
+                turnoDefectsData = [agg.turno1Defects, agg.turno2Defects];
+            }
+
             charts.turnoCompare = new Chart(ctxCompare, {
                 type: 'bar',
                 data: {
-                    labels: ['1º Turno', '2º Turno'],
+                    labels: turnoLabels,
                     datasets: [
                         {
                             label: 'Peças Inspecionadas',
-                            data: [agg.turno1Inspected, agg.turno2Inspected],
+                            data: turnoInspectedData,
                             backgroundColor: 'rgba(6, 182, 212, 1)',
                             borderColor: '#06B6D4',
                             borderWidth: 1.5,
@@ -1204,7 +1239,7 @@
                         },
                         {
                             label: 'Qtd Defeitos',
-                            data: [agg.turno1Defects, agg.turno2Defects],
+                            data: turnoDefectsData,
                             backgroundColor: 'rgba(244, 63, 94, 1)',
                             borderColor: '#F43F5E',
                             borderWidth: 1.5,
@@ -1241,10 +1276,12 @@
                 }
             });
 
-            document.getElementById('turno1-inspected-val').textContent = agg.turno1Inspected.toLocaleString('pt-BR');
-            document.getElementById('turno1-defects-val').textContent = agg.turno1Defects.toLocaleString('pt-BR');
-            document.getElementById('turno2-inspected-val').textContent = agg.turno2Inspected.toLocaleString('pt-BR');
-            document.getElementById('turno2-defects-val').textContent = agg.turno2Defects.toLocaleString('pt-BR');
+            var showTurno1 = state.shift !== '2';
+            var showTurno2 = state.shift !== '1';
+            document.getElementById('turno1-inspected-val').textContent = showTurno1 ? agg.turno1Inspected.toLocaleString('pt-BR') : '-';
+            document.getElementById('turno1-defects-val').textContent = showTurno1 ? agg.turno1Defects.toLocaleString('pt-BR') : '-';
+            document.getElementById('turno2-inspected-val').textContent = showTurno2 ? agg.turno2Inspected.toLocaleString('pt-BR') : '-';
+            document.getElementById('turno2-defects-val').textContent = showTurno2 ? agg.turno2Defects.toLocaleString('pt-BR') : '-';
             
             // 2. PARETO DONUT CHART
             var sortedDefects = Array.from(agg.defectMap.entries()).sort(function(a, b) { return b[1] - a[1]; });
